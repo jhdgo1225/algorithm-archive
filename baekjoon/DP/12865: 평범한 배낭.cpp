@@ -1,22 +1,24 @@
 #include <iostream>
 using namespace std;
-
-int weights[101];
-int values[101];
+int w[101];
+int v[101];
 int dp[101][100001];
+
+void func(int n, int k)
+{
+	if (n <= 0 || k <= 0 || dp[n][k])
+		return ;
+	func(n-1, k); func(n-1, k - w[n]);
+	if (k >= w[n]) dp[n][k] = max(dp[n-1][k], dp[n-1][k-w[n]]+v[n]);
+	else dp[n][k] = dp[n-1][k];
+}
+
 int main()
 {
-	int n, k;
-	cin >> n >> k;
-	for (int i=1; i<=n; i++)
-		cin >> weights[i] >> values[i];
-	for (int i=1; i<=k; i++)
-	{
-		for (int j=1; j<=n; j++)
-		{
-			if (weights[j] <= i) dp[j][i] = max(dp[j-1][i], dp[j-1][i - weights[j]] + values[j]);
-			else dp[j][i] = dp[j-1][i];
-		}
-	}
-	cout << dp[n][k];
+	int N, K;
+	cin >> N >> K;
+	for (int i=1; i<=N; i++)
+		cin >> w[i] >> v[i];
+	func(N, K);
+	cout << dp[N][K];
 }
