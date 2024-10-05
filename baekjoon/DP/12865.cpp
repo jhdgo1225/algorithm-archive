@@ -1,3 +1,4 @@
+// Baekjoon 12865번: 평범한 배낭
 #include <iostream>
 using namespace std;
 int w[101];

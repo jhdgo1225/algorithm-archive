@@ -1,3 +1,4 @@
+// Baekjoon 17626번: Four Squares
 #include <iostream>
 #include <cmath>
 using namespace std;

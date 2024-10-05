@@ -1,3 +1,4 @@
+// Baekjoon 9252번: LCS 2
 #include <iostream>
 #include <stack>
 using namespace std;
