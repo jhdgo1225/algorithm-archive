@@ -1,45 +1,36 @@
+// 참고 코드: https://www.acmicpc.net/source/370012
 // BOJ 1068번: 트리
 #include <iostream>
-#include <vector>
 using namespace std;
 
-vector<int> graphs[51];
-int p[51], res;
+int n, leaf, d, p[51], c[51];
 
-void delete_sub(int node)
+int del(int node)
 {
-	if (graphs[node].empty())
-		return ;
-	for (auto nxt : graphs[node])
-		delete_sub(nxt);
-	graphs[node].clear();
-}
-
-void find_leaf(int root)
-{
-	if (graphs[root].empty())
+	int res=0,l=1;
+	for (int i=0; i<n; i++)
 	{
-		res += 1;
-		return ;
+		if (p[i] == node)
+		{
+			l=0;
+			res += del(i);
+		}
 	}
-	for (auto nxt : graphs[root])
-		find_leaf(nxt);
+	return (res + l);
 }
 
 int main()
 {
-	int n, d, root;
 	cin >> n;
 	for (int i=0; i<n; i++)
 	{
 		cin >> p[i];
-		if (p[i] == -1) root = i;
-		else graphs[p[i]].push_back(i);
+		if (p[i] >= 0)
+			c[p[i]]++;
 	}
+	for (int i=0; i<n; i++)
+		if (c[i] == 0) leaf++;
 	cin >> d;
-	graphs[p[d]].erase(remove(graphs[p[d]].begin(), graphs[p[d]].end(), d), graphs[p[d]].end());
-	delete_sub(d);
-	if (d != root)
-		find_leaf(root);
-	cout << res;
+	if (c[p[d]] == 1) leaf++;
+	cout << leaf - del(d);
 }
