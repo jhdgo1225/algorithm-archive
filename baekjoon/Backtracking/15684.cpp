@@ -1,67 +1,53 @@
 #include <iostream>
 using namespace std;
 
-int N, M, H, label = 1, res = 0x3f3f3f3f;
-int legs[271][11];
+int ladder[31][11];
+int n,m,h;
 
-bool dfs(int cur, int depth, int limit)
-{
-	if (depth == limit)
+bool isManipulated() {
+	for (int j=1; j<=n; j++)
 	{
-		int cnt = 0;
-		for (int i=1; i<=N; i++)
-		{
-			int row = 1, col = i;
-			while (row <= H)
-			{
-				if (col - 1 >= 1 && legs[row][col - 1] && legs[row][col - 1] == legs[row][col])
-					col--;
-				else if (col + 1 <= N && legs[row][col + 1] && legs[row][col + 1] == legs[row][col])
-					col++;
-				row++;
-			}
-			if (i == col) cnt++;
+		int col = j;
+		for(int i=1;i<=h;++i) {
+			if(ladder[i][col]) col++;
+			else if(ladder[i][col-1]) col--;
 		}
-		if (cnt == N) {
-			cout << limit;
-			return (true);
-		}
-		return (false);
+		if(col != j)
+			return false;
 	}
-	for (int i=cur; i<N*H; i++)
-	{
-		int y = i / N + 1;
-		int x = i % N + 1;
-		if (x == N) continue;
-		if (legs[y][x] == 0 && legs[y][x + 1] == 0)
-		{
-			legs[y][x] = legs[y][x + 1] = label++;
-			if (dfs(i + 2, depth + 1, limit)) return (true);
-			legs[y][x] = legs[y][x + 1] = 0;
-			label--;
-		}
-	}
-	return (false);
+	return true;
 }
 
-int main()
-{
-	cin >> N >> M >> H;
-	if (M == 0)  {
-		cout << 0;
-		return (0);
+void dfs(int depth, int limit) {
+	if(depth == limit) {
+		if(isManipulated()) {
+			cout << limit;
+			exit(0);
+		}
+		return;
 	}
-	int a, b;
-	for (int i=0; i<M; i++)
+	for(int j=1;j<n;++j)
 	{
+		for(int i=1;i<=h;++i)
+		{
+			if(ladder[i][j] || ladder[i][j-1] || ladder[i][j+1]) continue;
+			ladder[i][j] = 1;
+			dfs(depth+1, limit);
+			ladder[i][j] = 0;
+			while(!ladder[i][j-1] && !ladder[i][j+1]) i++;
+		}
+	}
+}
+
+int main(void) {
+	cin >> n >> m >> h;
+	for(int i=1;i<=m;++i) {
+		int a,b;
 		cin >> a >> b;
-		legs[a][b] = legs[a][b + 1] = label++;
+		ladder[a][b] = 1;
 	}
-	bool flag = false;
-	for (int i=0; i<=3; i++)
-	{
-		flag = dfs(0, 0, i);
-		if (flag) break;
-	}
-	if (!flag) cout << -1;
+	for(int i=0;i<=3;i++)
+		dfs(0, i);
+	cout << -1;
+	return 0;
 }
