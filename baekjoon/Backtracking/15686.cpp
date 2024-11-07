@@ -4,9 +4,9 @@
 using namespace std;
 
 int n, m, res = 0x3f3f3f3f;
-vector<pair<int, int> > house;
-vector<pair<int, int> > chicken;
-vector<pair<int, int> > selected;
+vector<pair<int, int>> house;
+vector<pair<int, int>> chicken;
+vector<pair<int, int>> selected;
 
 void func(int depth, int start)
 {
