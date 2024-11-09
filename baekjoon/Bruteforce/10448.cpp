@@ -1,33 +1,19 @@
 #include <iostream>
 using namespace std;
-
-int tripleNum(int n)
-{
-	return (n * (n+1) / 2);
-}
-
-bool dfs(int cur, int dest, int depth, int limit)
-{
-	if (depth == limit)
-	{
-		if (!dest) return (true);
-		return (false);
+int dp[1001][4];
+int main() {
+	dp[0][0] = 1;
+	for(int k=1; k<=3; ++k){
+		for(int i=1; i<=1000; ++i){
+			for(int j=1; j*(j+1)/2<=i; ++j){
+				if(dp[i - j*(j+1)/2][k-1])
+					dp[i][k]=1;
+			}
+		}
 	}
-	for (int i=cur; i>=1; i--)
-		if (dfs(i, dest - tripleNum(i), depth + 1, limit))
-			return (true);
-	return (false);
-}
-
-int main()
-{
-	int t; cin >> t;
-	while (t--)
-	{
-		int n, maxi = 1; cin >> n;
-		while (tripleNum(maxi + 1) <= n)
-			maxi++;
-		if (dfs(maxi, n, 0, 3)) cout << "1\n";
-		else cout << "0\n";
+	int n, k; cin >> n;
+    while(n--){
+		cin >> k;
+        cout << dp[k][3] << endl;
 	}
 }
