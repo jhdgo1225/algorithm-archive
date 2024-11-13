@@ -1,36 +1,27 @@
-// Baekjoon 14003번: 가장 긴 증가하는 부분 수열 5
 #include <iostream>
 #include <algorithm>
-#include <stack>
 using namespace std;
 
 int a[1000001];
-int lis[1000001];
+int b[1000001];
 int idx[1000001];
-stack<int> res;
-
-int main(void)
+int main()
 {
-	int n, tmp, cur = 0;
-	cin >> n;
+	int mm = -1;
+	int n; cin >> n;
+	for (int i=0; i<n; i++)
+		cin >> a[i];
 	for (int i=0; i<n; i++)
 	{
-		cin >> a[i];
-		int tmp = lower_bound(lis, lis+cur, a[i]) - lis;
-		if (tmp == cur) cur++;
-		lis[tmp] = a[i];
-		idx[i] = tmp;
+		idx[i] = (int)(lower_bound(b, b + mm + 1, a[i]) - b);
+		b[idx[i]] = a[i];
+		mm = max(mm, idx[i]);
 	}
-	cout << cur << '\n';
+	int k=mm;
+	cout << mm + 1 << '\n';
 	for (int i=n-1; i>=0; i--)
-	{
-        if (idx[i] != cur - 1) continue;
-    	res.push(a[i]);
-		cur--;
-	}
-	while (!res.empty())
-	{
-		cout << res.top() << ' ';
-		res.pop();
-	}
+		if (mm == idx[i]) 
+			b[mm--] = a[i];
+	for (int i=0; i<=k; i++)
+		cout << b[i] << ' ';
 }
