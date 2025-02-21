@@ -1,5 +1,6 @@
 #include <iostream>
 #include <deque>
+#include <cmath>
 using namespace std;
 
 struct FireBall {
@@ -22,22 +23,21 @@ void simulation() {
 		if (grid[i].empty()) continue;
 		if (grid[i].size() >= 2)
 		{
-			long long dirFlag = 0;
-			bool oddeven = false;
 			int massSum = 0;
 			int speedSum = 0;
 			int cnt = grid[i].size();
-			for (int j=0; j<cnt; j++)
-			{
-				if (grid[i][j].d & 1) dirFlag |= (1 << j);
+			bool allSameParity = true;
+			bool firstOdd = (grid[i][0].d % 2 == 1);
+			for (int j = 0; j < cnt; j++) {
+				if (j >= 1 && (grid[i][j].d % 2 == 1) != firstOdd)
+					allSameParity = false;
 				massSum += grid[i][j].m;
 				speedSum += grid[i][j].s;
 			}
 			grid[i].clear();
 			if (massSum / 5 == 0) continue;
-			if (!dirFlag || dirFlag == (int)pow(2, cnt) - 1) oddeven = true;
 			for (int j=0; j<4; j++)
-				q.push_back({i/N, i%N, massSum/5, speedSum/cnt, 2 * j + !oddeven});
+				q.push_back({i/N, i%N, massSum/5, speedSum/cnt, 2 * j + !allSameParity});
 		}
 		else
 		{
@@ -49,6 +49,8 @@ void simulation() {
 
 int main()
 {
+	ios::sync_with_stdio(0);
+	cin.tie(0);
 	cin >> N >> M >> K;
 	for (int i=0; i<M; i++)
 	{
@@ -63,14 +65,8 @@ int main()
 			int ny = q[i].r + dy[q[i].d] * q[i].s;
 			if (nx >= N) nx %= N;
 			if (ny >= N) ny %= N;
-			if (nx < 0) {
-				if (nx % N == 0) nx = q[i].c;
-				else nx = N + (nx % N);
-			}
-			if (ny < 0) {
-				if (ny % N == 0) ny = q[i].r;
-				else ny = N + (ny % N);
-			}
+			if (nx < 0) nx = (nx % N + N) % N;
+			if (ny < 0) ny = (ny % N + N) % N;
 			grid[ny * N + nx].push_back({ny, nx, q[i].m, q[i].s, q[i].d});
 		}
 		q.clear();
