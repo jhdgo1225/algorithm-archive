@@ -35,9 +35,16 @@ int main()
 	}
 	fill(arr, arr + n, -1);
 	sort(legs, legs + n);
-	for (int i=0; i<n-1; i++) {
-		if (legs[i].first.first <= legs[i+1].first.second && legs[i].first.second >= legs[i+1].first.first) {
-			uni(legs[i].second, legs[i+1].second);
+	int tmpX1 = legs[0].first.first, tmpX2 = legs[0].first.second, idx = legs[0].second;
+	for (int i=1; i<n; i++) {
+		if (tmpX1 <= legs[i].first.second && tmpX2 >= legs[i].first.first) {
+			uni(idx, legs[i].second);
+			if (tmpX2 < legs[i].first.second) tmpX2 = legs[i].first.second;
+		}
+		else {
+			tmpX1 = legs[i].first.first;
+			tmpX2 = legs[i].first.second;
+			idx = legs[i].second;
 		}
 	}
 	for (int i=0; i<m; i++) {
