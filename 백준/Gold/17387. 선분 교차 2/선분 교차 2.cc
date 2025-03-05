@@ -29,15 +29,12 @@ int ccw(point &p1, point &p2, point &p3) {
 bool lineIntersect(line &l1, line &l2) {
 	int chk1 = ccw(l1.p1, l1.p2, l2.p1) * ccw(l1.p1, l1.p2, l2.p2);
 	int chk2 = ccw(l2.p1, l2.p2, l1.p1) * ccw(l2.p1, l2.p2, l1.p2);
-	if (chk1 <= 0 && chk2 <= 0) {
-		if (chk1 == 0 && chk2 == 0) {
-			if (l1.p2 <= l1.p1) swap(l1.p1, l1.p2);
-			if (l2.p2 <= l2.p1) swap(l2.p1, l2.p2);
-			return (l1.p1 <= l2.p2 && l2.p1 <= l1.p2);
-		}
-		return true;
-	}
-	return false;
+    if (chk1 == 0 && chk2 == 0) {
+        if (l1.p2 <= l1.p1) swap(l1.p1, l1.p2);
+        if (l2.p2 <= l2.p1) swap(l2.p1, l2.p2);
+        return (l1.p1 <= l2.p2 && l2.p1 <= l1.p2);
+    }
+	return (chk1 <= 0 && chk2 <= 0);
 }
 
 int main()
