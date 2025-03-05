@@ -5,9 +5,8 @@ using ll = long long;
 struct point {
 	ll x, y;
 	bool operator<=(point &p1) {
-		if (x == p1.x) {
+		if (x == p1.x)
 			return y <= p1.y;
-		}
 		return x <= p1.x;
 	}
 };
@@ -21,9 +20,9 @@ line lines[2];
 int ccw(point &p1, point &p2, point &p3) {
 	ll res = (p1.x * p2.y + p2.x * p3.y + p3.x * p1.y) - \
 		(p2.x * p1.y + p3.x * p2.y + p1.x * p3.y);
-	if (res > 0) return (1);
+	if (res > 0) return 1;
 	if (res < 0) return -1;
-	return (0);
+	return 0;
 }
 
 bool lineIntersect(line &l1, line &l2) {
