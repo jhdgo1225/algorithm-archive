@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-int day[21], pages[101];
+int day[21], pages[21];
 int dp[21][201];
 int main()
 {
