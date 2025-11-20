@@ -1,13 +1,14 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
-void assignPrime(bool (&isNotPrime)[1000001])
+void assignPrime(vector<bool>& isNotPrime, int maxNum)
 {
 	isNotPrime[0] = isNotPrime[1] = true;
-	for (int i=2; i<=1000000; i++) {
+	for (int i = 2; i <= maxNum; i++) {
 		if (isNotPrime[i]) continue;
-		int j=2;
-		while (i * j <= 1000000) {
+		int j = 2;
+		while (i * j <= maxNum) {
 			if (!isNotPrime[i * j]) isNotPrime[i * j] = true;
 			j++;
 		}
@@ -16,9 +17,9 @@ void assignPrime(bool (&isNotPrime)[1000001])
 
 int main()
 {
-	bool isNotPrime[1000001] = {false, };
-	assignPrime(isNotPrime);
-	int N,M; cin >> N >> M;
+	int N, M; cin >> N >> M;
+	vector<bool> isNotPrime(M + 1, false);
+	assignPrime(isNotPrime, M);
 	for (int i=N; i<=M; i++)
 		if (!isNotPrime[i])
 			cout << i << '\n';
