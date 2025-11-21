@@ -1,30 +1,25 @@
 #include <iostream>
-#include <algorithm>
-#include <map>
+#include <queue>
 using namespace std;
 using ll = long long;
-
+ 
 int main()
 {
 	freopen("./inputs/19113_input.txt", "r", stdin);
-	int T;cin>>T;
-	for (int testcase=0; testcase<T; testcase++)
-	{
-		ll N, a[201]; cin >> N;
-		ll b[201];
-		map<ll, int> mapper;
-		for (int i=0; i<2*N; i++) {
-			cin >> a[i];
-			mapper[a[i]] += 1;
-			b[i] = a[i] * 3 / 4;
-		}
-		cout << "#" << testcase + 1 << ' ';
-		for (int i=0; i<2*N; i++) {
-			if (mapper[b[i]]) {
-				cout << b[i] << ' ';
-				mapper[b[i]] -= 1;
-			}
-		}
-		cout << '\n';
-	}
+    int T; cin >> T;
+    for (int t = 1; t <= T; t++) {
+        int n; cin >> n;
+        queue<ll> q;
+        cout << "#" << t << ' ';
+        for (int i = 0; i < n * 2; i++) {
+            ll ret; cin >> ret;
+            if (q.empty() || ret != q.front() * 4 / 3) q.push(ret);
+            else {
+                cout << q.front() << ' ';
+                q.pop();
+            }
+        }
+        cout << '\n';
+    }
+    return 0;
 }
