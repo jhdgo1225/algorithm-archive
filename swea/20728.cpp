@@ -9,29 +9,15 @@ int main()
 	int T;cin>>T;
 	for (int i=0; i<T; i++)
 	{
-		deque<int> inputs, windows;
-		int num, N,K; cin >> N >> K;
-		for (int i=0; i<N; i++) {
-			cin >> num;
-			inputs.push_back(num);
+		int N, K, pockets[51], diff = 1e9; cin >> N >> K;
+		for (int j=0; j<N; j++) {
+			cin >> pockets[j];
 		}
-		sort(inputs.begin(), inputs.end());
-		ll tmp = 0, res = 1e18;
-		for (auto it: inputs) {
-			cout << it << '\n';
-			if (windows.size() == K) {
-				ll aa = windows.front();
-				windows.pop_front();
-				tmp -= (windows.front() - aa);
-			}
-			if (windows.size()) {
-				tmp += (it - windows.back());
-				windows.push_back(it);
-				res = min(res, tmp);
-			}
-			if (windows.empty()) windows.push_back(it);
-		}
+		sort(pockets, pockets + N);
 		cout << "#" << (i + 1) << ' ';
-		cout << res << '\n';
+		for (int j=0; j<N-K+1; j++) {
+			diff = min(diff, pockets[j+K-1] - pockets[j]);
+		}
+		cout << diff << '\n';
 	}
 }
