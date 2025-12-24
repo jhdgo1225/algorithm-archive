@@ -1,7 +1,6 @@
 SELECT ANIMAL_ID, NAME,
     CASE
-        WHEN SUBSTRING_INDEX(SEX_UPON_INTAKE, ' ', 1)='Neutered' OR
-            SUBSTRING_INDEX(SEX_UPON_INTAKE, ' ', 1)='Spayed'
+        WHEN SEX_UPON_INTAKE LIKE "Neutered%" OR SEX_UPON_INTAKE LIKE "Spayed%"
             THEN 'O'
         ELSE 'X'
     END AS '중성화'
