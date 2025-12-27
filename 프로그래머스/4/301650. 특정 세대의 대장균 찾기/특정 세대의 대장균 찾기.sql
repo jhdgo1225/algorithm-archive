@@ -4,7 +4,6 @@ AS (
     FROM ECOLI_DATA
     WHERE PARENT_ID IS NULL
     UNION ALL
-    -- Recursive 문장(읽어 올 때마다 행의 위치가 기억되어 다음번 읽어 올 때 다음 행으로 이동함)
     SELECT TB1.ID, TB1.PARENT_ID, CTE.GENERATION + 1
     FROM ECOLI_DATA as TB1 INNER JOIN CTE on TB1.PARENT_ID=CTE.ID
 )
