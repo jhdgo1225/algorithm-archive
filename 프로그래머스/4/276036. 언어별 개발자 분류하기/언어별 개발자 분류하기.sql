@@ -1,32 +1,22 @@
-SELECT
-    CASE
-        WHEN TB1.SKILL_CODE & (
-                SELECT SUM(CODE)
-                FROM SKILLCODES
-                WHERE CATEGORY='Front End'
-            ) > 0 THEN (
-                CASE
-                    WHEN TB1.SKILL_CODE & (
-                            SELECT CODE
-                            FROM SKILLCODES
-                            WHERE NAME='Python'
-                        ) > 0 THEN 'A'
-                    WHEN TB1.SKILL_CODE & (
-                            SELECT CODE
-                            FROM SKILLCODES
-                            WHERE NAME='C#'
-                        ) > 0 THEN 'B'
-                    ELSE 'C'
-                END
-            )
-        WHEN TB1.SKILL_CODE & (
-                SELECT CODE
-                FROM SKILLCODES
-                WHERE NAME='C#'
-            ) > 0 THEN 'B'
-    END AS GRADE,
-    TB1.ID,
-    TB1.EMAIL
-FROM DEVELOPERS AS TB1
-HAVING GRADE IS NOT NULL
-ORDER BY GRADE, ID;
+WITH MASKS AS (
+    SELECT 
+        (SELECT SUM(CODE) FROM SKILLCODES WHERE CATEGORY='Front End') AS FE_MASK,
+        (SELECT CODE FROM SKILLCODES WHERE NAME='Python') AS PY_MASK,
+        (SELECT CODE FROM SKILLCODES WHERE NAME='C#') AS CSHARP_MASK
+),
+GRADED AS (
+    SELECT
+        D.ID,
+        D.EMAIL,
+        CASE
+            WHEN (D.SKILL_CODE & M.FE_MASK) > 0 AND (D.SKILL_CODE & M.PY_MASK) > 0 THEN 'A'
+            WHEN (D.SKILL_CODE & M.CSHARP_MASK) > 0 THEN 'B'
+            WHEN (D.SKILL_CODE & M.FE_MASK) > 0 THEN 'C'
+        END AS GRADE
+    FROM DEVELOPERS D
+        CROSS JOIN MASKS M
+)
+SELECT GRADE, ID, EMAIL
+FROM GRADED
+WHERE GRADE IS NOT NULL
+ORDER BY GRADE ASC, ID ASC;
