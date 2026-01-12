@@ -1,22 +1,39 @@
-WITH MASKS AS (
-    SELECT 
-        (SELECT SUM(CODE) FROM SKILLCODES WHERE CATEGORY='Front End') AS FE_MASK,
-        (SELECT CODE FROM SKILLCODES WHERE NAME='Python') AS PY_MASK,
-        (SELECT CODE FROM SKILLCODES WHERE NAME='C#') AS CSHARP_MASK
-),
-GRADED AS (
-    SELECT
-        D.ID,
-        D.EMAIL,
-        CASE
-            WHEN (D.SKILL_CODE & M.FE_MASK) > 0 AND (D.SKILL_CODE & M.PY_MASK) > 0 THEN 'A'
-            WHEN (D.SKILL_CODE & M.CSHARP_MASK) > 0 THEN 'B'
-            WHEN (D.SKILL_CODE & M.FE_MASK) > 0 THEN 'C'
-        END AS GRADE
-    FROM DEVELOPERS D
-        CROSS JOIN MASKS M
-)
-SELECT GRADE, ID, EMAIL
-FROM GRADED
-WHERE GRADE IS NOT NULL
+WITH CTE AS (SELECT 'Front End' AS NAME, SUM(CODE) AS CODE
+FROM SKILLCODES
+WHERE CATEGORY='Front End'
+UNION
+SELECT NAME, CODE
+FROM SKILLCODES
+WHERE NAME IN ('Python', 'C#'))
+SELECT 
+    CASE
+        WHEN SKILL_CODE & (
+            SELECT CODE
+            FROM CTE
+            WHERE NAME='Front End'
+        ) > 0 THEN (
+            CASE
+                WHEN SKILL_CODE & (
+                    SELECT CODE
+                    FROM CTE
+                    WHERE NAME='Python'
+                ) > 0 THEN 'A'
+                WHEN SKILL_CODE & (
+                    SELECT CODE
+                    FROM CTE
+                    WHERE NAME='C#'
+                ) THEN 'B'
+                ELSE 'C'
+            END
+        )
+        WHEN SKILL_CODE & (
+            SELECT CODE
+            FROM CTE
+            WHERE NAME='C#'
+        ) THEN 'B'
+    END AS GRADE,
+    ID,
+    EMAIL
+FROM DEVELOPERS
+HAVING GRADE IS NOT NULL
 ORDER BY GRADE ASC, ID ASC;
