@@ -1,39 +1,24 @@
-WITH CTE AS (SELECT 'Front End' AS NAME, SUM(CODE) AS CODE
-FROM SKILLCODES
-WHERE CATEGORY='Front End'
-UNION
-SELECT NAME, CODE
-FROM SKILLCODES
-WHERE NAME IN ('Python', 'C#'))
-SELECT 
-    CASE
-        WHEN SKILL_CODE & (
-            SELECT CODE
-            FROM CTE
-            WHERE NAME='Front End'
-        ) > 0 THEN (
-            CASE
-                WHEN SKILL_CODE & (
-                    SELECT CODE
-                    FROM CTE
-                    WHERE NAME='Python'
-                ) > 0 THEN 'A'
-                WHEN SKILL_CODE & (
-                    SELECT CODE
-                    FROM CTE
-                    WHERE NAME='C#'
-                ) THEN 'B'
-                ELSE 'C'
-            END
-        )
-        WHEN SKILL_CODE & (
-            SELECT CODE
-            FROM CTE
-            WHERE NAME='C#'
-        ) THEN 'B'
-    END AS GRADE,
-    ID,
-    EMAIL
-FROM DEVELOPERS
-HAVING GRADE IS NOT NULL
-ORDER BY GRADE ASC, ID ASC;
+WITH SKILL_P AS (
+    SELECT CODE
+    FROM SKILLCODES
+    WHERE NAME = 'Python'
+),
+SKILL_F AS (
+    SELECT SUM(CODE) AS CODE
+    FROM SKILLCODES
+    WHERE CATEGORY = 'Front End'
+),
+SKILL_C AS (
+    SELECT CODE
+    FROM SKILLCODES
+    WHERE NAME = 'C#'
+)
+SELECT CASE
+        WHEN SKILL_P.CODE & SKILL_CODE AND SKILL_F.CODE & SKILL_CODE THEN 'A'
+        WHEN SKILL_C.CODE & SKILL_CODE THEN 'B'
+        WHEN SKILL_F.CODE & SKILL_CODE THEN 'C' 
+        END GRADE,
+        ID, EMAIL
+FROM DEVELOPERS, SKILL_P, SKILL_F, SKILL_C
+HAVING GRADE IS NOT NULL 
+ORDER BY GRADE, ID
