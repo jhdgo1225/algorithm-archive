@@ -1,4 +1,5 @@
 import sys
+from bisect import bisect_left
 
 input = sys.stdin.readline
 
@@ -12,10 +13,7 @@ def main():
 		B.sort()
 		cnt = 0
 		for a in A:
-			for b in B:
-				if a <= b:
-					break
-				cnt += 1
+			cnt += bisect_left(B, a)
 		print(cnt)
 
 if __name__ == '__main__':
