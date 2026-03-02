@@ -1,10 +1,3 @@
 def solution(arr):
-    answer = []
-    row_length = len(arr)
-    col_length = max([len(row) for row in arr])
-    for row in arr:
-        answer.append(row.copy() + [0] * (row_length - col_length))
-    if (row_length < col_length):
-        for _ in range(col_length - row_length):
-            answer.append([0] * col_length)
-    return answer
+    n = max(len(arr), max(len(row) for row in arr))
+    return [r + [0]*(n-len(r)) for r in arr] + [[0]*n]*(n-len(arr))
