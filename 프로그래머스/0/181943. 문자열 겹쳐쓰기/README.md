@@ -1,10 +1,10 @@
 # [level 0] 문자열 겹쳐쓰기 - 181943 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/181943) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/181943?language=java) 
 
 ### 성능 요약
 
-메모리: 9.19 MB, 시간: 0.01 ms
+메모리: 87.5 MB, 시간: 16.07 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2026년 03월 02일 15:19:48
+2026년 03월 02일 15:37:04
 
 ### 문제 설명
 
