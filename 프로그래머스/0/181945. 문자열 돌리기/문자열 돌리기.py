@@ -1,2 +1,1 @@
-str = input()
-print("\n".join(list(str)))
+print(*input(), sep='\n')
