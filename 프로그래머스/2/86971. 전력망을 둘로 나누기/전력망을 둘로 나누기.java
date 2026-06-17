@@ -29,7 +29,7 @@ class Solution {
             Arrays.fill(visited, false);
             visited[wires[i][0] - 1] = true;
             int towers = dfs(wires[i][0], map, visited);
-            int tmp = Math.abs(n - 2 * towers);
+            int tmp = Math.abs((n - towers) - towers);
             if (answer == -1 || answer > tmp) answer = tmp;
         }
         return answer;
