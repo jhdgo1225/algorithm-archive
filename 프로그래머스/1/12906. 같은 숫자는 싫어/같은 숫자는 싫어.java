@@ -2,12 +2,21 @@ import java.util.*;
 
 public class Solution {
     public int[] solution(int []arr) {
-        List<Integer> list = new ArrayList<>();
-        for (int elem : arr) {
-            if (list.isEmpty() || list.get(list.size() - 1) != elem) {
-                list.add(elem);
+        int firstCnt = 0;
+        boolean[] firstNumberChecker = new boolean[arr.length];
+        for (int i=0; i<arr.length; i++) {
+            if (i == 0 || arr[i-1] != arr[i]) {
+                firstNumberChecker[i] = true;
+                firstCnt++;
             }
         }
-        return list.stream().mapToInt(Integer::intValue).toArray();
+        int[] result = new int[firstCnt];
+        int pointer = 0;
+        for (int i=0; pointer < firstCnt && i < arr.length; i++) {
+            if (firstNumberChecker[i]) {
+                result[pointer++] = arr[i];
+            }
+        }
+        return result;
     }
 }
