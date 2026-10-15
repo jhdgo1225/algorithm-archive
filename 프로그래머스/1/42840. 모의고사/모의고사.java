@@ -16,6 +16,8 @@ class Solution {
         if(maxScore == scoreA) {list.add(1);}
         if(maxScore == scoreB) {list.add(2);}
         if(maxScore == scoreC) {list.add(3);}
-        return list.stream().mapToInt(i->i.intValue()).toArray();
+        int[] result = new int[list.size()];
+        for (int i=0; i<list.size(); i++) result[i] = list.get(i).intValue();
+        return result;
     }
 }
