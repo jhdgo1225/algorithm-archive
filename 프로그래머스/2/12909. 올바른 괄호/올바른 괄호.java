@@ -2,18 +2,14 @@ import java.util.*;
 
 class Solution {
     boolean solution(String s) {
-        boolean answer = true;
-
-        List<String> stack = new ArrayList<>();
-        for (int i=0; i<s.length(); i++) {
-            if (s.charAt(i) == '(') stack.add("(");
-            else {
-                if (stack.isEmpty()) answer = false;
-                else stack.remove(stack.size() - 1);
-            }
+        boolean answer = false;
+        int cnt = 0;
+        for (int i=0; i < s.length(); i++) {
+            if (s.charAt(i) == '(') cnt++;
+            if (s.charAt(i) == ')') cnt--;
+            if (cnt < 0) break;
         }
-        if (!stack.isEmpty())
-            answer = false;
+        if (cnt == 0) answer = true;
         return answer;
     }
 }
