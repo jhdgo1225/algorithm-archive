@@ -4,8 +4,7 @@ import java.util.ArrayDeque;
 class Solution {
     public int solution(int[][] maps) {
         int mapSize = maps.length * maps[0].length;
-        int[] dy = {-1, 1, 0, 0};
-        int[] dx = {0, 0, -1, 1};
+        int[][] dir = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
         Deque<int[]> queue = new ArrayDeque<>();
         queue.add(new int[]{0, 0});
         while (!queue.isEmpty()) {
@@ -13,9 +12,10 @@ class Solution {
             int y = item[0];
             int x = item[1];
             int curValue = maps[y][x];
+            if (y == maps.length - 1 && x == maps[0].length - 1) return curValue;
             for (int i=0; i<4; i++) {
-                int ny = y + dy[i];
-                int nx = x + dx[i];
+                int ny = y + dir[i][0];
+                int nx = x + dir[i][1];
                 if (ny < 0 || ny >= maps.length || nx < 0 || nx >= maps[0].length
                     || maps[ny][nx] == 0)
                     continue;
@@ -25,7 +25,6 @@ class Solution {
                 }
             }
         }
-        int answer = maps[maps.length - 1][maps[0].length - 1];
-        return (answer != 1) ? answer : -1;
+        return -1;
     }
 }
