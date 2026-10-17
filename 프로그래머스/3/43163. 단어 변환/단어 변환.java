@@ -1,6 +1,6 @@
+// 추후 BFS 적용
 class Solution {
     private int dfs(String begin, String target, String[] words, boolean[] visited, int step) {
-        // System.out.println("(현재 단계: " + step + "단계) 시작 문자열: " + begin + ", 최종 문자열: " + target);
         if (begin.equals(target)) return step;
         int minStep = 0;
         for (int i=0; i<words.length; i++) {
@@ -10,7 +10,6 @@ class Solution {
                 if (begin.charAt(j) != words[i].charAt(j)) diffLetterCnt++;
             }
             if (diffLetterCnt == 1) {
-                // System.out.println("(다음 단계: " + (step + 1) + "단계) !현재 문자열: " + begin + ", 다음 문자열: " + words[i]);
                 visited[i] = true;
                 int tmp = dfs(words[i], target, words, visited, step + 1);
                 minStep = (minStep == 0) ? tmp : Math.min(minStep, tmp);
