@@ -1,56 +1,29 @@
 import java.util.*;
 
-// don't change 'Main' class name and  'public' accessor
-
-class Job {
-    int id;
-    int reqTime;
-    int procTime;
-    Job(int id, int reqTime, int procTime) {
-        this.id = id;
-        this.reqTime = reqTime;
-        this.procTime = procTime;
-    }
-}
-
-
 class Solution {
     public int solution(int[][] jobs) {
-        Job[] jobArr = new Job[jobs.length];
-        for (int i=0; i<jobs.length; i++) jobArr[i] = new Job(i, jobs[i][0], jobs[i][1]);
-        Arrays.sort(jobArr, (a, b) -> a.reqTime - b.reqTime);
-        PriorityQueue<Job> pq = new PriorityQueue<>(new Comparator<Job>() {
-            @Override
-            public int compare(Job o1, Job o2) {
-                if (o1.procTime == o2.procTime) {
-                    if (o1.reqTime == o2.reqTime)
-                        return o1.id - o2.id;
-                    return o1.reqTime - o2.reqTime;
-                }
-                return o1.procTime - o2.procTime;
-            }
-        });
-        int curJobReqTime = jobArr[0].reqTime;
-        int totalRetTime = 0;
+        Arrays.sort(jobs, (job1, job2) -> (job1[0] == job2[0]) ? job1[1] - job2[1] : job1[0] - job2[0]);
+        // 1st. 작업 시간이 짧은 작업
+        // 2nd. 요청 시각이 빠른 작업
+        PriorityQueue<int[]> pq = new PriorityQueue<>((job1, job2) -> (job1[1] == job2[1]) ? job1[0] - job2[0] : job1[1] - job2[1]);
+        
+        int curTime = 0;
+        int retTime = 0;
         int idx = 0;
-        while (idx < jobs.length) {
-            while (idx < jobs.length && jobArr[idx].reqTime <= curJobReqTime) {
-                pq.add(jobArr[idx++]);
+        
+        while (idx < jobs.length || !pq.isEmpty()) {
+            // job을 하나씩 넣을 때, 현재까지 소요된 시간과 job의 요청된 시점을 비교하며 삽입한다.
+            while (idx < jobs.length && jobs[idx][0] <= curTime) {
+                pq.add(jobs[idx++]);
             }
             if (pq.isEmpty()) {
-                curJobReqTime = jobArr[idx].reqTime;
-                continue;
+                curTime = jobs[idx][0];
+                pq.add(jobs[idx++]);
             }
-            Job priorityJob = pq.poll();
-            totalRetTime += (curJobReqTime + priorityJob.procTime) - priorityJob.reqTime;
-            curJobReqTime += priorityJob.procTime;
+            int[] job = pq.poll();
+            curTime += job[1];
+            retTime += (curTime - job[0]);
         }
-        while (!pq.isEmpty()) {
-            Job priorityJob = pq.poll();
-            totalRetTime += (curJobReqTime + priorityJob.procTime) - priorityJob.reqTime;
-            curJobReqTime += priorityJob.procTime;
-        }
-        int answer = totalRetTime / jobArr.length;
-        return answer;
+        return retTime / jobs.length;
     }
 }
