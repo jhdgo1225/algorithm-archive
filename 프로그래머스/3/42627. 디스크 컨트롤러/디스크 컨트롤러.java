@@ -1,29 +1,36 @@
 import java.util.*;
 
 class Solution {
+    private static final int REQUEST = 0;
+    private static final int DURATION = 1;
+
     public int solution(int[][] jobs) {
-        Arrays.sort(jobs, (job1, job2) -> (job1[0] == job2[0]) ? job1[1] - job2[1] : job1[0] - job2[0]);
-        // 1st. 작업 시간이 짧은 작업
-        // 2nd. 요청 시각이 빠른 작업
-        PriorityQueue<int[]> pq = new PriorityQueue<>((job1, job2) -> (job1[1] == job2[1]) ? job1[0] - job2[0] : job1[1] - job2[1]);
-        
-        int curTime = 0;
-        int retTime = 0;
-        int idx = 0;
-        
-        while (idx < jobs.length || !pq.isEmpty()) {
-            // job을 하나씩 넣을 때, 현재까지 소요된 시간과 job의 요청된 시점을 비교하며 삽입한다.
-            while (idx < jobs.length && jobs[idx][0] <= curTime) {
-                pq.add(jobs[idx++]);
+        Arrays.sort(jobs, (a, b) -> Integer.compare(a[REQUEST], b[REQUEST]));
+
+        // 소요 시간이 짧은 순, 같으면 요청 시각이 빠른 순
+        PriorityQueue<int[]> waiting = new PriorityQueue<>((a, b) ->
+                a[DURATION] != b[DURATION]
+                        ? Integer.compare(a[DURATION], b[DURATION])
+                        : Integer.compare(a[REQUEST], b[REQUEST]));
+
+        int now = 0;
+        int totalTurnaround = 0;
+        int next = 0;
+
+        for (int done = 0; done < jobs.length; done++) {
+            // 대기 작업이 없으면 다음 요청 시각까지 기다린다
+            if (waiting.isEmpty()) {
+                now = Math.max(now, jobs[next][REQUEST]);
             }
-            if (pq.isEmpty()) {
-                curTime = jobs[idx][0];
-                pq.add(jobs[idx++]);
+            // 지금까지 요청된 작업을 모두 대기열에 넣는다
+            while (next < jobs.length && jobs[next][REQUEST] <= now) {
+                waiting.add(jobs[next++]);
             }
-            int[] job = pq.poll();
-            curTime += job[1];
-            retTime += (curTime - job[0]);
+
+            int[] job = waiting.poll();
+            now += job[DURATION];
+            totalTurnaround += now - job[REQUEST];
         }
-        return retTime / jobs.length;
+        return totalTurnaround / jobs.length;
     }
 }
